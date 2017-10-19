@@ -1,0 +1,41 @@
+extends ../layouts/mobile
+
+
+block main
+  h1= property.title
+
+block content
+  .row
+    .span9
+      p=property.body
+      .meta.muted
+        - var name = property.user.name ? property.user.name : property.user.username
+        p Realtor -&nbsp;
+          a(href="/users/"+property.user._id)= name
+        p.muted= formatDate(property.listedAt, "%b %d, %Y at %I:%M %p")
+        - if (property.tags)
+          .tags
+            - each tag in property.tags.split(',')
+              a.tag(href="/tags/"+tag)
+                i.icon-tags
+                |  #{tag}
+              | &nbsp;&nbsp;
+    .span3
+      - if (!property.isNew && property.image && property.image.files && property.image.files.length)
+        img(src=property.image.cdnUri + '/mini_' + property.image.files[0])
+
+  p
+    br
+    form.center.form-inline.confirm(action="/properties/"+property.id, method="post")
+      input(type='hidden', name='_csrf', value="#{csrf_token}")
+      a.btn(href='/properties/'+property._id+'/edit', title="edit") Edit
+      | &nbsp;&nbsp;
+      input(type="hidden", name="_method", value="DELETE")
+      button.btn.btn-danger(type="submit") delete
+
+  p
+    br
+    h3 Comments
+    - each comment in property.comments
+      include ../comments/comment
+    include ../comments/form

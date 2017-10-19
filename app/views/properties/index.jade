@@ -1,0 +1,23 @@
+extends ../layouts/default
+
+block main
+  h1= title
+
+block content
+  form.form-horizontal(method="post", action=action, enctype="multipart/form-data", role="form")
+    input(type="hidden", name="_csrf", value="#{csrf_token}")
+    .input-group(style="margin: 15px 15px;")
+      input.form-control#search(type='text', name="search", value='search...', placeholder='Search for properties')
+
+  - if (properties.length)
+    - each property in properties
+      .list-group
+        .list-group-item
+          include property
+
+    - if (pages > 1)
+      ul.pagination
+        != createPagination(pages, page)
+  - else
+    h4.muted No properties.&nbsp;
+      a(href="/properties/new") create one

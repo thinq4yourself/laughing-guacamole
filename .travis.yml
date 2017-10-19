@@ -1,0 +1,6 @@
+services:
+  - mongodb
+language: node_js
+node_js:
+  - "7.6.0"
+  - "7.6.3"

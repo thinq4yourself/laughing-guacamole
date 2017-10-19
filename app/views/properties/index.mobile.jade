@@ -1,0 +1,31 @@
+extends ../layouts/mobile
+
+block main
+  h1= title
+
+block content
+  - each property in properties
+    .property
+      h3
+        a(href='/properties/'+property._id, title=property.title) #{property.title}
+      p= property.body
+
+      .meta.muted
+        span= formatDate(property.listedAt)
+        | &nbsp; - &nbsp;
+        span Realtor &nbsp;
+
+        - var name = property.user.name ? property.user.name : property.user.username
+
+        a(href="/users/"+property.user._id)= name
+        &nbsp; - &nbsp;
+        - if (property.tags)
+          - each tag in property.tags.split(',')
+            | &nbsp;
+            a.tag(href="/tags/"+tag)
+              i.icon-tags
+              |  #{tag}
+
+  - if (pages > 1)
+    ul.pagination
+      != createPagination(pages, page)

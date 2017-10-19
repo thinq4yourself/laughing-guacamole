@@ -1,0 +1,100 @@
+extends ../layouts/default
+
+block main
+  div(style="padding-left: 5vw; padding-right: 5vw;").jumbotron
+    h2= property.title
+      .lead= property.description
+      .col-md-1
+        a.btn.btn-primary(href='/properties/'+property._id+'/edit', title="edit") Edit
+      .col-md-1
+        form(action="/properties/"+property.id, method="post", onsubmit="return confirm('Are you sure?')")
+          input(type='hidden', name='_csrf', value="#{csrf_token}")
+          input(type="hidden", name="_method", value="DELETE")          
+          button.btn.btn-danger(type="submit").glyphicon.glyphicon-remove
+      
+      .row
+        .col-md-8.meta.small
+          - if (property.user)
+            - var name = property.user.name ? property.user.name : property.user.username
+            p Realtor :&nbsp;
+              a(href="/users/"+property.user._id)= name
+
+          - if (property.tags)
+            p Features: &nbsp;
+              - each tag in property.tags.split(',')
+                i.muted.fa.fa-tag &nbsp;
+                a.tag(href="/tags/"+tag)= tag
+                | &nbsp;&nbsp;
+
+          p.muted= "Listed: " + formatDate(property.listedAt, "%b %d, %Y at %I:%M %p")
+
+block content
+  .panel.panel-default
+    .panel-heading
+      h3.panel-title= "MLS#: " + property.mls
+    .container(style="padding-left:0;")
+      .row
+      .col-sm-12(style="padding-left:0;")
+        table.table.table-striped
+          tr
+            td
+              h2.muted(style="font-size: 18px;margin-top: 10px;") Street Address
+            td
+              h4= property.street1
+          tr
+            td
+              h2.muted(style="font-size: 18px;margin-top: 10px;") City
+            td
+              h4= property.city
+          tr
+            td
+              h2.muted(style="font-size: 18px;margin-top: 10px;") State
+            td
+              h4= property.state
+          tr
+            td
+              h2.muted(style="font-size: 18px;margin-top: 10px;") Zip Code
+            td
+              h4= property.zipcode
+          tr
+            td
+              h2.muted(style="font-size: 18px;margin-top: 10px;") Neighborhood
+            td
+              h4= property.neighborhood
+          tr
+            td
+              h2.muted(style="font-size: 18px;margin-top: 10px;") Square Footage
+            td
+              h4= property.squareFootage
+          tr
+            td
+              h2.muted(style="font-size: 18px;margin-top: 10px;") Bedrooms
+            td
+              h4= property.bedrooms
+          tr
+            td
+              h2.muted(style="font-size: 18px;margin-top: 10px;") Bathrooms
+            td
+              h4= property.bathrooms
+
+          tr
+            td
+              h2.muted(style="font-size: 18px;margin-top: 10px;") Features
+            td
+              - if (property.tags)
+                - each tag in property.tags.split(',')
+                  i.muted.fa.fa-tag &nbsp;
+                  a.tag(href="/tags/"+tag)= tag
+                  | &nbsp;&nbsp;
+
+
+    .col-md-4
+      - if (!property.isNew && property.image && property.image.files && property.image.files.length)
+        img(src=property.image.cdnUri + '/mini_' + property.image.files[0])
+
+  form(action="/properties/"+property.id, method="post", onsubmit="return confirm('Are you sure?')")
+    input(type='hidden', name='_csrf', value="#{csrf_token}")
+    a.btn.btn-default(href='/properties/'+property._id+'/edit', title="edit") Edit
+    | &nbsp;
+    input(type="hidden", name="_method", value="DELETE")
+    button.btn.btn-danger(type="submit") Delete

@@ -1,0 +1,95 @@
+extends ../layouts/default
+
+block main
+  h1= title
+
+block content
+  - var action = '/properties'
+  - action += property.isNew? '' : '/' + property.id
+
+  .row
+    .col-md-8
+      form.form-horizontal(method="post", action=action, enctype="multipart/form-data", role="form")
+
+        input(type="hidden", name="_csrf", value="#{csrf_token}")
+
+        - if (!property.isNew)
+          input(type="hidden", name="_method", value="PUT")
+
+        .form-group
+          label.col-sm-2.control-label(for='title') Property Title
+          .col-sm-10
+            input.form-control#title(type='text', name="title", value=property.title, placeholder='Enter the property common title')
+
+        .form-group
+          label.col-sm-2.control-label(for='mls') MLS #
+          .col-sm-4
+            input.form-control#mls(type='text', name="mls", value=property.mls, placeholder='Enter the MLS #')
+
+        .form-group
+          label.col-sm-2.control-label(for='price') Price
+          .col-sm-3
+            input.form-control#price(type='number', name="price", value=property.price, placeholder='Enter the price')
+
+        .form-group
+          label.col-sm-2.control-label(for='file') Image
+          .col-sm-10
+            input.form-control#file(type='file', name="image")
+
+        .form-group
+          label.col-sm-2.control-label(for='description') Description
+          .col-sm-10
+            textarea.form-control#description(rows="5", name="description", placeholder='Enter the property description')=property.description
+
+        .form-group
+          label.col-sm-2.control-label(for='street1') Street Address
+          .col-sm-10
+            input.form-control#street1(type='text', name="street1", value=property.street1, placeholder='Enter the street address')
+
+        .form-group
+          label.col-sm-2.control-label(for='city') City
+          .col-sm-3
+            input.form-control#city(type='text', name="city", value=property.city, placeholder='Enter city')
+
+          .col-sm-3
+            label.col-sm-3.control-label(for='state') State
+            .col-sm-9
+              input.form-control#state(type='text', name="state", value=property.state, placeholder='Enter state')
+
+          .col-sm-4
+            label.col-sm-3.control-label(for='zipcode') Zip
+            .col-sm-9
+              input.form-control#zipcode(type='text', name="zipcode", value=property.zipcode, placeholder='Enter zipcode')
+
+        .form-group
+          label.col-sm-2.control-label(for='neigborhood') Neigborhood
+          .col-sm-10
+            input.form-control#neigborhood(type='text', name="neigborhood", value=property.neigborhood, placeholder='Enter the neigborhood')
+
+        .form-group
+          label.col-sm-2.control-label(for='squareFootage') Square Footage
+          .col-sm-2
+            input.form-control#squareFootage(type='number', name="squareFootage", value=property.squareFootage, placeholder='Enter SqFt')
+
+          label.col-sm-2.control-label(for='bathrooms') Bathrooms
+          .col-sm-2
+            input.form-control#bathrooms(type='number', name="bathrooms", value=property.bathrooms, placeholder='Enter #')
+
+          label.col-sm-2.control-label(for='bedrooms') Bedrooms
+          .col-sm-2
+            input.form-control#bedrooms(type='number', name="bedrooms", value=property.bedrooms, placeholder='Enter #')
+
+        .form-group
+          label.col-sm-2.control-label(for='tags') Features
+          .col-sm-10
+            textarea.form-control#tags(rows="5", name="tags", placeholder='Separate features by comma')=property.tags
+
+        .form-group
+          .col-sm-offset-2.col-sm-10
+            button.btn.btn-primary(type='submit') Save
+            | &nbsp;
+            a.btn(href='/properties', title="cancel") Cancel
+
+    .col-md-4
+      - if (!property.iszNew && property.image && property.image.files && property.image.files.length)
+        img(src=property.image.cdnUri + "/mini_" + property.image.files[0])

@@ -1,0 +1,28 @@
+property.property
+  h3
+    a(href='/properties/'+property._id, title=property.title) #{property.title}
+  p= property.body
+
+  .meta
+    span.muted= formatDate(property.listedAt)
+    - if (property.mls)
+      span  &nbsp;
+      span MLS# &nbsp;
+      - 
+        a(href='/properties/'+property._id, title=property.mls) #{property.mls}
+
+    - if (property.user)
+      | &nbsp; - &nbsp;
+      span Realtor &nbsp;
+
+      - var name = property.user.name ? property.user.name : property.user.username
+
+      a(href="/users/"+property.user._id)= name
+
+    - if (property.tags)
+      | &nbsp; - &nbsp;
+      span Features &nbsp;
+      - each tag in property.tags.split(',')
+        i.muted.fa.fa-tag &nbsp;
+        a.tag(href="/tags/"+tag)= tag
+        | &nbsp;&nbsp;
